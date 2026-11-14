@@ -7,7 +7,7 @@ services:
       - |
         /usr/bin/entrypoint &
         until wget -qO- http://localhost:3000/api/healthz >/dev/null 2>&1; do sleep 2; done
-        su git -c "forgejo admin user create --config /data/gitea/conf/app.ini --admin --username admin --password 'ChangeMe123!' --email admin@example.com --must-change-password=true" || true
+        su git -c "forgejo admin user create --config /data/gitea/conf/app.ini --admin --username forgejo-admin --password 'ChangeMe123!' --email admin@example.com --must-change-password=true" || true
         wait
     volumes:
       - forgejo_data:/data
