@@ -27,7 +27,7 @@ services:
       - FORGEJO__server__HTTP_PORT=3000
       - FORGEJO__server__DOMAIN=localhost
       - FORGEJO__server__ROOT_URL=http://localhost:3000/
-      - FORGEJO__server__DISABLE_SSH=true
+      - FORGEJO__server__DISABLE_SSH=false
       - FORGEJO__security__INSTALL_LOCK=true
       - FORGEJO__service__DISABLE_REGISTRATION=true
     x-tinkr:
@@ -48,6 +48,10 @@ services:
             timeout: 10
             retries: 3
             success_code: 200-399
+        forgejo-22:
+          port: 22
+          protocol: tcp
+          public: true
 
   db:
     image: postgres:17
