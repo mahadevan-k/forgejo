@@ -28,7 +28,6 @@ services:
       - FORGEJO__server__DOMAIN=localhost
       - FORGEJO__server__ROOT_URL=http://localhost:3000/
       - FORGEJO__server__DISABLE_SSH=false
-      - FORGEJO__server__SSH_PORT=222
       - FORGEJO__server__START_SSH_SERVER=true
       - FORGEJO__server__SSH_DOMAIN=localhost
       - FORGEJO__security__INSTALL_LOCK=true
@@ -40,7 +39,7 @@ services:
         - FORGEJO__database__HOST=<hostname:db-5432>:5432
         - FORGEJO__server__DOMAIN=<hostname:forgejo-3000>
         - FORGEJO__server__ROOT_URL=<url:forgejo-3000>/
-        - FORGEJO__server__SSH_DOMAIN=<hostname:forgejo-222>
+        - FORGEJO__server__SSH_DOMAIN=<hostname:forgejo-22>
       ports:
         forgejo-3000:
           port: 3000
@@ -52,8 +51,8 @@ services:
             timeout: 10
             retries: 3
             success_code: 200-399
-        forgejo-222:
-          port: 222
+        forgejo-22:
+          port: 22
           protocol: tcp
           public: true
 
