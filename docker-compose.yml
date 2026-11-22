@@ -43,6 +43,8 @@ services:
         - FORGEJO__server__DOMAIN=<hostname:forgejo-3000>
         - FORGEJO__server__ROOT_URL=<url:forgejo-3000>/
         - FORGEJO__server__SSH_DOMAIN=<hostname:forgejo-222>
+        - FORGEJO__server__SSH_PORT=<port:forgejo-222>
+        - FORGEJO__server__SSH_LISTEN_PORT=<port:forgejo-222>
       ports:
         forgejo-3000:
           port: 3000
