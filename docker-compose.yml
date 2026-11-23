@@ -5,9 +5,9 @@ services:
       - /bin/sh
       - -c
       - |
-        /usr/local/bin/docker-entrypoint.sh &
+        /usr/bin/entrypoint /usr/bin/s6-svscan /etc/s6 &
         until wget -qO- http://localhost:3000/api/healthz >/dev/null 2>&1; do sleep 2; done
-        forgejo admin user create --config /data/gitea/conf/app.ini --admin --username forgejo-admin --password 'ChangeMe123!' --email admin@example.com --must-change-password=true || true
+        su-exec git forgejo admin user list --config /data/gitea/conf/app.ini --admin | grep -q forgejo-admin || su-exec git forgejo admin user create --config /data/gitea/conf/app.ini --admin --username forgejo-admin --email admin@example.com --password 'ChangeMe123!' --must-change-password=true
         wait
     volumes:
       - forgejo_data:/data
