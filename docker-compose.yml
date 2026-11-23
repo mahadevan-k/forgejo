@@ -5,14 +5,15 @@ services:
       - /bin/sh
       - -c
       - |
-        /usr/bin/entrypoint &
+        /usr/bin/entrypoint /usr/bin/s6-svscan /etc/s6 &
         until wget -qO- http://localhost:3000/api/healthz >/dev/null 2>&1; do sleep 2; done
-        su git -c "forgejo admin user create --config /data/gitea/conf/app.ini --admin --username forgejo-admin --password 'ChangeMe123!' --email admin@example.com --must-change-password=true" || true
+        su-exec git forgejo admin user list --config /data/gitea/conf/app.ini --admin | grep -q forgejo-admin || su-exec git forgejo admin user create --config /data/gitea/conf/app.ini --admin --username forgejo-admin --email admin@example.com --password 'ChangeMe123!' --must-change-password=true
         wait
     volumes:
       - forgejo_data:/data
     ports:
       - 3000:3000
+      - 222:222
     depends_on:
       - db
     restart: always
@@ -27,7 +28,11 @@ services:
       - FORGEJO__server__HTTP_PORT=3000
       - FORGEJO__server__DOMAIN=localhost
       - FORGEJO__server__ROOT_URL=http://localhost:3000/
-      - FORGEJO__server__DISABLE_SSH=true
+      - FORGEJO__server__DISABLE_SSH=false
+      - FORGEJO__server__SSH_PORT=222
+      - FORGEJO__server__SSH_LISTEN_PORT=222
+      - FORGEJO__server__START_SSH_SERVER=true
+      - FORGEJO__server__SSH_DOMAIN=localhost
       - FORGEJO__security__INSTALL_LOCK=true
       - FORGEJO__service__DISABLE_REGISTRATION=true
     x-tinkr:
@@ -37,6 +42,8 @@ services:
         - FORGEJO__database__HOST=<hostname:db-5432>:5432
         - FORGEJO__server__DOMAIN=<hostname:forgejo-3000>
         - FORGEJO__server__ROOT_URL=<url:forgejo-3000>/
+        - FORGEJO__server__SSH_DOMAIN=<hostname:forgejo-222>
+        - FORGEJO__server__SSH_PORT=<port:forgejo-222>
       ports:
         forgejo-3000:
           port: 3000
@@ -48,6 +55,10 @@ services:
             timeout: 10
             retries: 3
             success_code: 200-399
+        forgejo-222:
+          port: 222
+          protocol: tcp
+          public: true
 
   db:
     image: postgres:17
